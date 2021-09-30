@@ -1,4 +1,4 @@
-#Next.js #React #Typescript #JavaScript #Worker
+Next.js React Typescript JavaScript with worker
 
 [Edit on StackBlitz ⚡️](https://stackblitz.com/edit/github-7ltawm)
 
