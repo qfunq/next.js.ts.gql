@@ -47,7 +47,7 @@ const Index = () => {
   const comlinkWorkerRef = useRef<Worker>();
   const comlinkWorkerApiRef = useRef<Comlink.Remote<WorkerApi>>();
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Comlink worker
     comlinkWorkerRef.current = new Worker(
       new URL('../comlink.worker.ts', import.meta.url)
