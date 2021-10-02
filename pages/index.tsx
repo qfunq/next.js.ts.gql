@@ -9,6 +9,7 @@ import {
 } from '../lib/viewer.graphql';
 import { initializeApollo } from '../lib/apollo';
 
+import * as Comlink from 'comlink';
 import { WorkerApi } from '../comlink.worker';
 
 const Index = () => {
@@ -42,9 +43,9 @@ const Index = () => {
     });
   };
   // for comlink
-  const [comlinkMessage, setComlinkMessage] = React.useState('');
-  const comlinkWorkerRef = React.useRef<Worker>();
-  const comlinkWorkerApiRef = React.useRef<Comlink.Remote<WorkerApi>>();
+  const [comlinkMessage, setComlinkMessage] = useState('');
+  const comlinkWorkerRef = useRef<Worker>();
+  const comlinkWorkerApiRef = useRef<Comlink.Remote<WorkerApi>>();
 
   React.useEffect(() => {
     // Comlink worker
