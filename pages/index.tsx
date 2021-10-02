@@ -9,6 +9,8 @@ import {
 } from '../lib/viewer.graphql';
 import { initializeApollo } from '../lib/apollo';
 
+import { WorkerApi } from '../comlink.worker';
+
 const Index = () => {
   const { viewer } = useViewerQuery().data!;
   const [newName, setNewName] = useState('');
@@ -39,6 +41,28 @@ const Index = () => {
       },
     });
   };
+  // for comlink
+  const [comlinkMessage, setComlinkMessage] = React.useState('');
+  const comlinkWorkerRef = React.useRef<Worker>();
+  const comlinkWorkerApiRef = React.useRef<Comlink.Remote<WorkerApi>>();
+
+  React.useEffect(() => {
+    // Comlink worker
+    comlinkWorkerRef.current = new Worker(
+      new URL('../comlink.worker.ts', import.meta.url)
+    );
+    comlinkWorkerApiRef.current = Comlink.wrap<WorkerApi>(
+      comlinkWorkerRef.current
+    );
+    return () => {
+      comlinkWorkerRef.current?.terminate();
+    };
+  }, []);
+
+  const handleComlinkWork = async () => {
+    const msg = await comlinkWorkerApiRef.current?.getName();
+    setComlinkMessage(`Comlink response => ${msg}`);
+  };
 
   const workerRef = useRef();
   useEffect(() => {
@@ -55,7 +79,8 @@ const Index = () => {
   }, []);
   return (
     <div>
-      You're signed in as {viewer.name} and you're {viewer.status}. Go to the{' '}
+      Random word: {comlinkMessage}. You're signed in as {viewer.name} and
+      you're {viewer.status} . Go to the{' '}
       <Link href="/about">
         <a>about</a>
       </Link>{' '}
@@ -72,6 +97,7 @@ const Index = () => {
           onClick={() => {
             onChangeName();
             handleWork();
+            handleComlinkWork();
           }}
         />
       </div>
