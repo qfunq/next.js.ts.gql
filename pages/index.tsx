@@ -10,7 +10,7 @@ import {
 import { initializeApollo } from '../lib/apollo';
 
 import * as Comlink from 'comlink';
-import { WorkerApi } from '../comlink.worker';
+import { WorkerApi } from '../workers/comlink.worker';
 
 const Index = () => {
   const { viewer } = useViewerQuery().data!;
@@ -50,7 +50,7 @@ const Index = () => {
   useEffect(() => {
     // Comlink worker
     comlinkWorkerRef.current = new Worker(
-      new URL('../comlink.worker.ts', import.meta.url)
+      new URL('../workers/comlink.worker.ts', import.meta.url)
     );
     comlinkWorkerApiRef.current = Comlink.wrap<WorkerApi>(
       comlinkWorkerRef.current
@@ -67,7 +67,9 @@ const Index = () => {
 
   const workerRef = useRef();
   useEffect(() => {
-    workerRef.current = new Worker(new URL('../worker.js', import.meta.url));
+    workerRef.current = new Worker(
+      new URL('../workers/worker.js', import.meta.url)
+    );
     workerRef.current.onmessage = (evt) =>
       alert(`WebWorker Response => ${evt.data}`);
     return () => {
